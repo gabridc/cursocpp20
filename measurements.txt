@@ -1,0 +1,9 @@
+madrid;10
+barcelona;13
+murcia;25
+madrid;26
+barcelona;25
+murcia;10
+madrid;9
+barcelona;7
+murcia;35

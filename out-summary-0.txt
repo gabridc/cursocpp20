@@ -1,0 +1,9 @@
+------------------------------
+Number of cores: 2
+Multithread: 0
+Total Entries: 9
+Mapper duration: 1.9005e-05 s
+Shuffle duration: 3.0985e-05 s
+Reduce duration: 3.0985e-05 s
+Total duration: 0.000222422 s
+------------------------------
