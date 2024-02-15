@@ -60,6 +60,7 @@
         "span": "cpp",
         "variant": "cpp",
         "format": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "coroutine": "cpp"
     }
 }
