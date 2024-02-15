@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
             totalEntries++;
             //std::cout << line.first << " " << line.second << " " << res ++ << std::endl;
 
-    //std::cout << "Total entries: " << totalEntries << std::endl;
+    std::cout << "Total entries: " << totalEntries << std::endl;
 
 
     // suffle

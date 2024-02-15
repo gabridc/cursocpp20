@@ -13,6 +13,7 @@
 #include <chrono>
 #include <cmath>
 #include <ranges>
+#include "generator.h"
 using namespace std;
 
 void writeOutput(std::map<string, std::vector<double>>& shufflemap, std::map<string, std::tuple<double, double, double>>& output, 
@@ -136,16 +137,19 @@ uint32_t findLastCharLine(const char* buffer, unsigned long pos)
     return p;
 }
 
-void readLine(const char* buffer, string& line, unsigned long& initPos, unsigned long& size)
+Generator<string> readLine(const char* buffer, unsigned long& initPos, unsigned long& size)
 {
-    line.clear();
+    string line;
     do
     {
         if((char) buffer[initPos] != '\n')
+        {
             line += buffer[initPos];
+            
+        }
         initPos++;
     } while ( (char) buffer[initPos] != '\n' && initPos < size);
-
+    co_yield line;
 }
 
 void mapper(const char* buffer, std::vector<std::pair<string, double>>& map, unsigned long start, unsigned long end, int core, unsigned long size)
@@ -163,19 +167,25 @@ void mapper(const char* buffer, std::vector<std::pair<string, double>>& map, uns
     auto start2 = std::chrono::system_clock::now();
     while (initPos <= lastPos)
     {   
-        readLine(buffer, line, initPos, lastPos);
-        if(line.size() > 1)
+        auto gen = readLine(buffer, initPos, lastPos);
+        for (;gen;)
         {
-            size_t pos = line.find(';');
-            try
+            auto line = gen();
+            if(line.size() > 1)
             {
-                // I have decided to implement my own s2d, std::stod() has poor performance in multithreading
-                map.emplace_back(line.substr(0, pos), s2d(line.substr(pos+1)));
+                size_t pos = line.find(';');
+                try
+                {
+                    // I have decided to implement my own s2d, std::stod() has poor performance in multithreading
+                    map.emplace_back(line.substr(0, pos), s2d(line.substr(pos+1)));
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << e.what() << " " <<line << '\n';
+                }
             }
-            catch(const std::exception& e)
-            {
-                std::cerr << e.what() << " " <<line << '\n';
-            }
+            std::cout << line << std::endl;
+            std::cout << map.size() << std::endl;
         }
     }
     auto end2 = std::chrono::system_clock::now();
@@ -207,6 +217,7 @@ void reduce2(std::map<string, std::vector<double>>& map,  std::map<string, std::
         << " " << std::get<1>(values)
         << " " << std::get<2>(values)
         << std::endl;
+        output.emplace(city, values);
     }
 
     //| std::ranges::views::sort([](auto v1, auto v2){ return v1 > v2})
@@ -214,8 +225,7 @@ void reduce2(std::map<string, std::vector<double>>& map,  std::map<string, std::
     std::sort(map[keys[index]]);
 
     double suma = std::accumulate(map[keys[index]].begin(), map[keys[index]].end(), 0.0);
-    double average = suma / size;
+    double average = suma / size;*/
 
-    output.emplace(keys[index], std::tuple(map[keys[index]][0], average, map[keys[index]][size - 1]));
-*/
+
 }
