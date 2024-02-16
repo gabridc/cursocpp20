@@ -61,6 +61,7 @@
         "variant": "cpp",
         "format": "cpp",
         "ranges": "cpp",
-        "coroutine": "cpp"
+        "coroutine": "cpp",
+        "set": "cpp"
     }
 }
